@@ -205,17 +205,36 @@
         .dialog-content {
             background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(25px);
-            border: 2px solid;
-            border-image: linear-gradient(45deg, #06FFA5, #8E2DE2, #FF006E, #FFB800) 1;
+            border: 2px solid transparent;
             border-radius: 20px;
+            background-clip: padding-box;
             padding: 30px;
             max-width: 400px;
             width: 90%;
+            position: relative;
             box-shadow: 
                 0 0 50px rgba(6, 255, 165, 0.3),
                 0 0 100px rgba(142, 45, 226, 0.2),
                 inset 0 0 50px rgba(255, 255, 255, 0.05);
             animation: dialogSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .dialog-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #06FFA5, #8E2DE2, #FF006E, #FFB800, #06FFA5);
+            border-radius: 20px;
+            padding: 2px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            z-index: -1;
+            animation: borderRotate 6s linear infinite;
         }
 
         @keyframes dialogSlideIn {
@@ -398,9 +417,155 @@
             background: linear-gradient(135deg, rgba(6, 255, 165, 0.3), rgba(138, 45, 226, 0.3));
         }
 
-        .settings-btn::before {
-            content: '⚙️';
-            animation: rotate 8s linear infinite;
+        /* AUDIO CONTROLS */
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        .audio-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.2), rgba(138, 45, 226, 0.2));
+            border: 2px solid rgba(6, 255, 165, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #06FFA5;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(6, 255, 165, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .audio-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 12px 35px rgba(6, 255, 165, 0.5);
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.3), rgba(138, 45, 226, 0.3));
+        }
+
+        .audio-btn.playing {
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.4), rgba(138, 45, 226, 0.4));
+            box-shadow: 
+                0 0 30px rgba(6, 255, 165, 0.6),
+                0 0 60px rgba(138, 45, 226, 0.4);
+            animation: audioGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes audioGlow {
+            0%, 100% {
+                box-shadow: 
+                    0 0 30px rgba(6, 255, 165, 0.6),
+                    0 0 60px rgba(138, 45, 226, 0.4);
+            }
+            50% {
+                box-shadow: 
+                    0 0 40px rgba(6, 255, 165, 0.8),
+                    0 0 80px rgba(138, 45, 226, 0.6);
+            }
+        }
+
+        .volume-control {
+            width: 50px;
+            height: 150px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(6, 255, 165, 0.3);
+            border-radius: 25px;
+            padding: 10px 5px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .volume-control.show {
+            display: flex;
+        }
+
+        .volume-slider {
+            writing-mode: bt-lr;
+            -webkit-appearance: slider-vertical;
+            width: 5px;
+            height: 100px;
+            background: rgba(6, 255, 165, 0.2);
+            outline: none;
+            border-radius: 5px;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #06FFA5;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(6, 255, 165, 0.5);
+        }
+
+        .audio-visualizer {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            width: 50px;
+            height: 30px;
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .audio-visualizer.show {
+            display: flex;
+        }
+
+        .audio-bar {
+            width: 3px;
+            background: linear-gradient(to top, #06FFA5, #8E2DE2);
+            border-radius: 2px;
+            animation: audioWave 1s ease-in-out infinite;
+        }
+
+        .audio-bar:nth-child(1) { 
+            height: 10px; 
+            animation-delay: 0s; 
+        }
+        .audio-bar:nth-child(2) { 
+            height: 20px; 
+            animation-delay: 0.1s; 
+        }
+        .audio-bar:nth-child(3) { 
+            height: 15px; 
+            animation-delay: 0.2s; 
+        }
+        .audio-bar:nth-child(4) { 
+            height: 25px; 
+            animation-delay: 0.3s; 
+        }
+        .audio-bar:nth-child(5) { 
+            height: 18px; 
+            animation-delay: 0.4s; 
+        }
+
+        @keyframes audioWave {
+            0%, 100% {
+                transform: scaleY(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scaleY(1.5);
+                opacity: 1;
+            }
         }
 
         /* MAIN CONTAINER */
@@ -973,8 +1138,30 @@
             </div>
         </div>
         
-    <!-- SETTINGS BUTTON -->
-    <button class="settings-btn" onclick="openSettings()"></button>
+    <!-- AUDIO CONTROLS -->
+    <div class="audio-controls">
+        <button class="audio-btn" id="audioToggle" onclick="toggleAudio()">🎵</button>
+        <div class="volume-control" id="volumeControl">
+            <span style="color: #06FFA5; font-size: 12px;">🔊</span>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30" orient="vertical">
+            <span style="color: #06FFA5; font-size: 12px;">🔇</span>
+        </div>
+    </div>
+    
+    <!-- AUDIO VISUALIZER -->
+    <div class="audio-visualizer" id="audioVisualizer">
+        <div class="audio-bar"></div>
+        <div class="audio-bar"></div>
+        <div class="audio-bar"></div>
+        <div class="audio-bar"></div>
+        <div class="audio-bar"></div>
+    </div>
+    
+    <!-- BACKGROUND AUDIO -->
+    <audio id="galaxyAudio" loop preload="auto">
+        <source src="audio/01.mp3" type="audio/mpeg">
+        Your cosmic browser doesn't support the audio element.
+    </audio>
     
     <!-- SETTINGS DIALOG -->
     <div class="settings-dialog" id="settingsDialog">
@@ -1032,6 +1219,46 @@
         
         let apiToken = '';
         let selectedProvider = 'demo';
+        let isAudioPlaying = false;
+        
+        // Audio functions
+        function toggleAudio() {
+            const audio = document.getElementById('galaxyAudio');
+            const audioBtn = document.getElementById('audioToggle');
+            const volumeControl = document.getElementById('volumeControl');
+            const visualizer = document.getElementById('audioVisualizer');
+            
+            if (isAudioPlaying) {
+                // Stop audio
+                audio.pause();
+                audioBtn.textContent = '🎵';
+                audioBtn.classList.remove('playing');
+                volumeControl.classList.remove('show');
+                visualizer.classList.remove('show');
+                isAudioPlaying = false;
+            } else {
+                // Start audio
+                audio.play().then(() => {
+                    audioBtn.textContent = '🔊';
+                    audioBtn.classList.add('playing');
+                    volumeControl.classList.add('show');
+                    visualizer.classList.add('show');
+                    isAudioPlaying = true;
+                }).catch(error => {
+                    console.log('🌌 Cosmic audio requires user interaction first:', error);
+                    addMessage('🎵 Click the audio button to activate galactic soundscape! Some browsers require user interaction first.', 'ai');
+                });
+            }
+        }
+        
+        // Volume control
+        document.getElementById('volumeSlider').addEventListener('input', function() {
+            const audio = document.getElementById('galaxyAudio');
+            audio.volume = this.value / 100;
+        });
+        
+        // Set initial volume
+        document.getElementById('galaxyAudio').volume = 0.3;
         
         // Dialog functions
         function openSettings() {
