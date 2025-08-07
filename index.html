@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galactic AI Assistant</title>
+    <title>🌌 Galactic AI Assistant</title>
     
     <!-- CUSTOM FAVICON -->
     <link rel="icon" type="image/x-icon" href="image/icon.ico">
@@ -1007,6 +1007,7 @@
             body {
                 padding: 0;
                 margin: 0;
+                overflow: hidden;
             }
 
             /* HIDE BACKGROUND SELECTOR ON MOBILE */
@@ -1031,6 +1032,8 @@
                 position: fixed;
                 top: 0;
                 left: 0;
+                display: flex;
+                flex-direction: column;
             }
 
             .chat-container::before {
@@ -1038,36 +1041,40 @@
             }
 
             .chat-header {
-                padding: 15px;
+                padding: 12px 15px 8px 15px;
                 font-size: 18px;
                 letter-spacing: 1px;
                 flex-shrink: 0;
+                min-height: auto;
             }
 
             .chat-header::before {
-                font-size: 24px;
-                margin-bottom: 6px;
+                width: 28px;
+                height: 28px;
+                margin: 0 auto 6px auto;
             }
 
             .status-panel {
-                top: 12px;
+                top: 10px;
                 right: 12px;
                 gap: 6px;
             }
 
             .status-orb {
-                width: 10px;
-                height: 10px;
+                width: 8px;
+                height: 8px;
             }
 
             .chat-messages {
-                padding: 15px;
+                padding: 10px 15px;
                 gap: 12px;
                 flex: 1;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                /* Ensure messages area can scroll properly */
                 min-height: 0;
+                /* Ensure proper flex behavior */
+                display: flex;
+                flex-direction: column;
             }
 
             .message {
@@ -1079,51 +1086,59 @@
             }
 
             .chat-input-container {
-                padding: 15px;
+                padding: 12px 15px;
                 gap: 10px;
                 flex-shrink: 0;
                 background: rgba(6, 255, 165, 0.1);
                 backdrop-filter: blur(20px);
                 border-top: 1px solid rgba(6, 255, 165, 0.2);
-                /* Ensure input stays at bottom */
                 position: relative;
                 z-index: 100;
+                /* Ensure it stays at bottom and visible */
+                min-height: 70px;
+                display: flex;
+                align-items: center;
             }
 
             .chat-input {
-                padding: 14px 18px;
+                padding: 12px 16px;
                 font-size: 16px; /* Prevents zoom on iOS */
                 border-radius: 20px;
                 flex: 1;
+                min-height: 44px; /* Minimum touch target */
             }
 
             .send-btn {
-                padding: 14px 20px;
+                padding: 12px 18px;
                 font-size: 12px;
-                min-width: 80px;
+                min-width: 70px;
+                min-height: 44px; /* Minimum touch target */
                 border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             /* MOBILE SETTINGS BUTTON */
             .settings-btn {
                 position: fixed;
-                top: 20px;
+                top: 15px;
                 left: 15px;
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
                 z-index: 1001;
             }
 
             /* MOBILE SETTINGS DIALOG */
             .dialog-content {
-                margin: 20px;
-                padding: 25px;
+                margin: 15px;
+                padding: 20px;
                 border-radius: 15px;
                 max-width: none;
-                width: calc(100% - 40px);
-                max-height: 80vh;
-                max-height: 80dvh;
+                width: calc(100% - 30px);
+                max-height: 75vh;
+                max-height: 75dvh;
                 overflow-y: auto;
             }
 
@@ -1133,17 +1148,18 @@
 
             .dialog-header {
                 font-size: 18px;
-                margin-bottom: 20px;
+                margin-bottom: 15px;
                 letter-spacing: 1px;
             }
 
             .dialog-header::before {
-                font-size: 24px;
-                margin-bottom: 8px;
+                width: 24px;
+                height: 24px;
+                margin: 0 auto 8px auto;
             }
 
             .form-group {
-                margin-bottom: 18px;
+                margin-bottom: 15px;
             }
 
             .dialog-input {
@@ -1154,24 +1170,28 @@
             .dialog-buttons {
                 flex-direction: column;
                 gap: 12px;
-                margin-top: 25px;
+                margin-top: 20px;
             }
 
             .dialog-btn {
                 padding: 14px 20px;
                 font-size: 13px;
+                min-height: 44px;
             }
 
             .close-dialog {
-                top: 12px;
-                right: 12px;
-                font-size: 20px;
+                top: 10px;
+                right: 10px;
+                font-size: 18px;
                 padding: 8px;
+                min-width: 36px;
+                min-height: 36px;
             }
 
             /* MOBILE AUDIO CONTROLS */
             .audio-toggle {
                 padding: 12px 16px;
+                min-height: 44px;
             }
 
             .audio-icon {
@@ -1190,20 +1210,156 @@
                 margin-top: 12px;
             }
 
-            /* MOBILE PARTICLES */
+            /* MOBILE PARTICLES - Reduce for performance */
             .floating-particle {
-                width: 3px;
-                height: 3px;
+                width: 2px;
+                height: 2px;
             }
 
             /* MOBILE TYPING INDICATOR */
             .typing-indicator {
-                padding: 14px 18px;
+                padding: 12px 16px;
+                margin-bottom: 5px;
             }
 
             .typing-dot {
-                width: 10px;
-                height: 10px;
+                width: 8px;
+                height: 8px;
+            }
+        }
+
+        /* EXTRA SMALL SCREENS */
+        @media (max-width: 480px) {
+            .chat-header {
+                padding: 10px 12px 6px 12px;
+                font-size: 16px;
+            }
+
+            .chat-header::before {
+                width: 24px;
+                height: 24px;
+                margin: 0 auto 4px auto;
+            }
+
+            .chat-messages {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            .message {
+                max-width: 92%;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .chat-input-container {
+                padding: 10px 12px;
+                min-height: 60px;
+            }
+
+            .chat-input {
+                padding: 10px 14px;
+                min-height: 40px;
+            }
+
+            .send-btn {
+                padding: 10px 14px;
+                font-size: 11px;
+                min-width: 60px;
+                min-height: 40px;
+            }
+
+            .dialog-content {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .settings-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+                top: 12px;
+                left: 12px;
+            }
+        }
+
+        /* LANDSCAPE MOBILE - Critical for keyboard visibility */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .chat-container {
+                height: 100vh;
+                height: 100dvh;
+            }
+
+            .chat-header {
+                padding: 8px 15px 4px 15px;
+                font-size: 14px;
+            }
+
+            .chat-header::before {
+                width: 20px;
+                height: 20px;
+                margin: 0 auto 2px auto;
+            }
+
+            .chat-messages {
+                padding: 8px 12px;
+            }
+
+            .chat-input-container {
+                padding: 8px 12px;
+                min-height: 50px;
+            }
+
+            .chat-input {
+                padding: 8px 12px;
+                min-height: 36px;
+            }
+
+            .send-btn {
+                padding: 8px 12px;
+                min-height: 36px;
+                min-width: 50px;
+            }
+
+            .dialog-content {
+                max-height: 80vh;
+                max-height: 80dvh;
+                margin: 8px;
+            }
+
+            .settings-btn {
+                top: 8px;
+                left: 8px;
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+        }
+
+        /* MOBILE SAFE AREAS (iPhone X+) */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            @media (max-width: 768px) {
+                .chat-container {
+                    padding-top: env(safe-area-inset-top);
+                }
+
+                .settings-btn {
+                    top: calc(15px + env(safe-area-inset-top));
+                }
+                
+                .chat-input-container {
+                    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .chat-input-container {
+                    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+                }
+                
+                .settings-btn {
+                    top: calc(12px + env(safe-area-inset-top));
+                }
             }
         }
 
