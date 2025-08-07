@@ -987,7 +987,8 @@
         /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 0;
+                margin: 0;
             }
 
             /* HIDE BACKGROUND SELECTOR ON MOBILE */
@@ -1003,10 +1004,15 @@
             .chat-container {
                 width: 100vw;
                 height: 100vh;
+                height: 100dvh; /* Dynamic viewport height for mobile keyboards */
                 border-radius: 0;
                 max-width: none;
                 max-height: none;
                 min-height: 100vh;
+                min-height: 100dvh;
+                position: fixed;
+                top: 0;
+                left: 0;
             }
 
             .chat-container::before {
@@ -1014,9 +1020,10 @@
             }
 
             .chat-header {
-                padding: 20px 15px;
+                padding: 15px;
                 font-size: 18px;
                 letter-spacing: 1px;
+                flex-shrink: 0;
             }
 
             .chat-header::before {
@@ -1038,6 +1045,11 @@
             .chat-messages {
                 padding: 15px;
                 gap: 12px;
+                flex: 1;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                /* Ensure messages area can scroll properly */
+                min-height: 0;
             }
 
             .message {
@@ -1051,26 +1063,38 @@
             .chat-input-container {
                 padding: 15px;
                 gap: 10px;
+                flex-shrink: 0;
+                background: rgba(6, 255, 165, 0.1);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(6, 255, 165, 0.2);
+                /* Ensure input stays at bottom */
+                position: relative;
+                z-index: 100;
             }
 
             .chat-input {
                 padding: 14px 18px;
                 font-size: 16px; /* Prevents zoom on iOS */
+                border-radius: 20px;
+                flex: 1;
             }
 
             .send-btn {
                 padding: 14px 20px;
                 font-size: 12px;
                 min-width: 80px;
+                border-radius: 20px;
             }
 
             /* MOBILE SETTINGS BUTTON */
             .settings-btn {
-                top: 15px;
+                position: fixed;
+                top: 20px;
                 left: 15px;
                 width: 45px;
                 height: 45px;
                 font-size: 18px;
+                z-index: 1001;
             }
 
             /* MOBILE SETTINGS DIALOG */
@@ -1081,6 +1105,7 @@
                 max-width: none;
                 width: calc(100% - 40px);
                 max-height: 80vh;
+                max-height: 80dvh;
                 overflow-y: auto;
             }
 
@@ -1161,6 +1186,149 @@
             .typing-dot {
                 width: 10px;
                 height: 10px;
+            }
+        }
+
+        /* EXTRA SMALL SCREENS */
+        @media (max-width: 480px) {
+            .chat-header {
+                padding: 15px 12px;
+                font-size: 16px;
+            }
+
+            .chat-messages {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .message {
+                max-width: 92%;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .chat-input-container {
+                padding: 12px;
+            }
+
+            .send-btn {
+                padding: 12px 16px;
+                font-size: 11px;
+                min-width: 70px;
+            }
+
+            .dialog-content {
+                margin: 15px;
+                padding: 20px;
+            }
+
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+                top: 15px;
+            }
+        }
+
+        /* LANDSCAPE MOBILE - Critical for keyboard visibility */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .chat-container {
+                height: 100vh;
+                height: 100dvh;
+            }
+
+            .chat-header {
+                padding: 10px 15px;
+                font-size: 16px;
+            }
+
+            .chat-header::before {
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+
+            .chat-messages {
+                padding: 10px 12px;
+            }
+
+            .chat-input-container {
+                padding: 10px 12px;
+            }
+
+            .dialog-content {
+                max-height: 85vh;
+                max-height: 85dvh;
+                margin: 10px;
+            }
+
+            .settings-btn {
+                top: 10px;
+                left: 10px;
+            }
+        }
+
+        /* TOUCH OPTIMIZATIONS */
+        @media (hover: none) {
+            .settings-btn:hover,
+            .send-btn:hover,
+            .dialog-btn:hover {
+                transform: none;
+            }
+
+            .settings-btn:active,
+            .send-btn:active,
+            .dialog-btn:active {
+                transform: scale(0.95);
+                transition: transform 0.1s;
+            }
+
+            /* Larger touch targets */
+            .settings-btn,
+            .close-dialog {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* MOBILE SAFE AREAS (iPhone X+) */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            @media (max-width: 768px) {
+                .chat-container {
+                    padding-top: env(safe-area-inset-top);
+                    padding-bottom: env(safe-area-inset-bottom);
+                }
+
+                .settings-btn {
+                    top: calc(20px + env(safe-area-inset-top));
+                }
+                
+                .chat-input-container {
+                    padding-bottom: calc(15px + env(safe-area-inset-bottom));
+                }
+            }
+        }
+
+        /* PREVENT ZOOM ON INPUT FOCUS (iOS) */
+        @media (max-width: 768px) {
+            input[type="text"],
+            input[type="password"],
+            select,
+            textarea {
+                font-size: 16px !important;
+            }
+        }
+
+        /* KEYBOARD SPECIFIC ADJUSTMENTS */
+        @media (max-width: 768px) {
+            /* When keyboard is visible, ensure proper layout */
+            .chat-input:focus {
+                /* Scroll into view when focused */
+                scroll-margin-bottom: 20px;
+            }
+            
+            /* Prevent content jumping when keyboard appears */
+            .chat-container {
+                contain: layout style paint;
             }
         }
 
