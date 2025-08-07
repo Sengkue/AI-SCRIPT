@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot</title>
+    <title>🌌 Galactic AI Assistant</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,194 +14,1012 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            font-family: 'Exo 2', sans-serif;
+            background: #000000;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        .chat-container {
-            width: 400px;
-            height: 600px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
+            padding: 20px;
+            position: relative;
             overflow: hidden;
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 600;
+        /* ANIMATED GIF BACKGROUND SYSTEM */
+        .gif-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
         }
 
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .gif-background.active {
+            opacity: 1;
         }
 
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            word-wrap: break-word;
-            animation: slideIn 0.3s ease-out;
+        .gif-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7) contrast(1.1) saturate(1.2);
         }
 
-        .user-message {
-            background: #667eea;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
+        /* OVERLAY FOR BETTER CONTRAST */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 70%),
+                linear-gradient(45deg, rgba(6, 255, 165, 0.05), rgba(138, 45, 226, 0.05), rgba(255, 0, 110, 0.05));
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .ai-message {
-            background: #f1f1f1;
-            color: #333;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
+        /* PREMIUM PARTICLE OVERLAY */
+        .particle-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
         }
 
-        .chat-input-container {
-            padding: 20px;
-            background: #f8f9fa;
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(6, 255, 165, 0.6);
+            border-radius: 50%;
+            animation: particleFloat 8s linear infinite;
+            box-shadow: 
+                0 0 6px currentColor,
+                0 0 12px currentColor;
+        }
+
+        .floating-particle:nth-child(2n) {
+            background: rgba(138, 45, 226, 0.6);
+            animation-delay: -2s;
+        }
+
+        .floating-particle:nth-child(3n) {
+            background: rgba(255, 0, 110, 0.6);
+            animation-delay: -4s;
+        }
+
+        .floating-particle:nth-child(4n) {
+            background: rgba(255, 184, 0, 0.6);
+            animation-delay: -6s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* BACKGROUND SELECTOR */
+        .bg-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
             display: flex;
             gap: 10px;
+            flex-direction: column;
         }
 
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            outline: none;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        .chat-input:focus {
-            border-color: #667eea;
-        }
-
-        .send-btn {
-            padding: 12px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 25px;
+        .bg-option {
+            width: 60px;
+            height: 40px;
+            border: 2px solid rgba(6, 255, 165, 0.5);
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        .send-btn:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
+        .bg-option:hover {
+            border-color: #06FFA5;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(6, 255, 165, 0.5);
         }
 
-        .send-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
+        .bg-option.active {
+            border-color: #06FFA5;
+            box-shadow: 0 0 25px rgba(6, 255, 165, 0.8);
         }
 
-        .typing-indicator {
-            align-self: flex-start;
-            padding: 12px 16px;
-            background: #f1f1f1;
-            border-radius: 18px;
-            border-bottom-left-radius: 4px;
+        .bg-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+
+        .bg-option::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(6, 255, 165, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* SETTINGS DIALOG */
+        .settings-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: dialogFadeIn 0.3s ease-out;
+        }
+
+        .settings-dialog.show {
             display: flex;
-            gap: 4px;
         }
 
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #999;
-            animation: typing 1.4s infinite ease-in-out;
-        }
-
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes slideIn {
+        @keyframes dialogFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: scale(0.9);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1);
             }
         }
 
-        .api-setup {
-            padding: 15px;
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            margin: 10px;
+        .dialog-content {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(25px);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #06FFA5, #8E2DE2, #FF006E, #FFB800) 1;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 
+                0 0 50px rgba(6, 255, 165, 0.3),
+                0 0 100px rgba(142, 45, 226, 0.2),
+                inset 0 0 50px rgba(255, 255, 255, 0.05);
+            animation: dialogSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes dialogSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .dialog-header {
+            color: #06FFA5;
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .dialog-header::before {
+            content: '⚙️';
+            display: block;
+            font-size: 30px;
+            margin-bottom: 10px;
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            color: #06FFA5;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
             font-size: 12px;
-            color: #856404;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dialog-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(6, 255, 165, 0.3);
+            border-radius: 12px;
+            color: #06FFA5;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dialog-input:focus {
+            outline: none;
+            border-color: #06FFA5;
+            background: rgba(6, 255, 165, 0.1);
+            box-shadow: 
+                0 0 30px rgba(6, 255, 165, 0.3),
+                inset 0 0 20px rgba(6, 255, 165, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .dialog-input::placeholder {
+            color: rgba(6, 255, 165, 0.5);
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .dialog-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .dialog-btn.primary {
+            background: linear-gradient(135deg, #06FFA5, #8E2DE2);
+            color: white;
+            border: 2px solid rgba(6, 255, 165, 0.5);
+            box-shadow: 0 8px 25px rgba(6, 255, 165, 0.3);
+        }
+
+        .dialog-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(6, 255, 165, 0.5);
+        }
+
+        .dialog-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dialog-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .close-dialog {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .close-dialog:hover {
+            color: #FF006E;
+            background: rgba(255, 0, 110, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .info-text {
+            color: rgba(6, 255, 165, 0.7);
+            font-size: 11px;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(6, 255, 165, 0.2);
+        }
+
+        /* SETTINGS BUTTON */
+        .settings-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.2), rgba(138, 45, 226, 0.2));
+            border: 2px solid rgba(6, 255, 165, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #06FFA5;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(6, 255, 165, 0.3);
+        }
+
+        .settings-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 12px 35px rgba(6, 255, 165, 0.5);
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.3), rgba(138, 45, 226, 0.3));
+        }
+
+        .settings-btn::before {
+            content: '⚙️';
+            animation: rotate 8s linear infinite;
+        }
+
+        /* MAIN CONTAINER */
+        .chat-container {
+            width: min(500px, 90vw);
+            height: min(750px, 90vh);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(25px);
+            border: 2px solid transparent;
+            border-radius: 30px;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 
+                0 0 50px rgba(6, 255, 165, 0.3),
+                0 0 100px rgba(142, 45, 226, 0.2),
+                inset 0 0 50px rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 10;
+            animation: containerPulse 4s ease-in-out infinite;
+        }
+
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #06FFA5, #8E2DE2, #FF006E, #FFB800, #06FFA5);
+            border-radius: 30px;
+            padding: 2px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            z-index: -1;
+            animation: borderRotate 6s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% {
+                background: linear-gradient(45deg, #06FFA5, #8E2DE2, #FF006E, #FFB800, #06FFA5);
+            }
+            25% {
+                background: linear-gradient(135deg, #8E2DE2, #FF006E, #FFB800, #06FFA5, #8E2DE2);
+            }
+            50% {
+                background: linear-gradient(225deg, #FF006E, #FFB800, #06FFA5, #8E2DE2, #FF006E);
+            }
+            75% {
+                background: linear-gradient(315deg, #FFB800, #06FFA5, #8E2DE2, #FF006E, #FFB800);
+            }
+            100% {
+                background: linear-gradient(45deg, #06FFA5, #8E2DE2, #FF006E, #FFB800, #06FFA5);
+            }
+        }
+
+        @keyframes containerPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 50px rgba(6, 255, 165, 0.3),
+                    0 0 100px rgba(142, 45, 226, 0.2),
+                    inset 0 0 50px rgba(255, 255, 255, 0.05);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 80px rgba(6, 255, 165, 0.5),
+                    0 0 150px rgba(142, 45, 226, 0.4),
+                    inset 0 0 80px rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* HEADER */
+        .chat-header {
+            background: linear-gradient(135deg, 
+                rgba(6, 255, 165, 0.2), 
+                rgba(142, 45, 226, 0.2), 
+                rgba(255, 0, 110, 0.2));
+            color: #06FFA5;
+            padding: 30px;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(6, 255, 165, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::before {
+            content: '🌌';
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+            animation: rotate3D 6s linear infinite;
+        }
+
+        .chat-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(6, 255, 165, 0.4), 
+                transparent);
+            animation: scanning 3s linear infinite;
+        }
+
+        @keyframes rotate3D {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            25% { transform: rotateY(90deg) rotateX(0deg); }
+            50% { transform: rotateY(180deg) rotateX(90deg); }
+            75% { transform: rotateY(270deg) rotateX(180deg); }
+            100% { transform: rotateY(360deg) rotateX(360deg); }
+        }
+
+        @keyframes scanning {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* STATUS INDICATORS */
+        .status-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .status-orb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: orbPulse 2s infinite;
+        }
+
+        .orb-1 {
+            background: #06FFA5;
+            box-shadow: 0 0 20px #06FFA5;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            background: #8E2DE2;
+            box-shadow: 0 0 20px #8E2DE2;
+            animation-delay: 0.5s;
+        }
+
+        .orb-3 {
+            background: #FF006E;
+            box-shadow: 0 0 20px #FF006E;
+            animation-delay: 1s;
+        }
+
+        @keyframes orbPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* API SETUP */
+        .api-setup {
+            padding: 25px;
+            background: linear-gradient(135deg, 
+                rgba(6, 255, 165, 0.1), 
+                rgba(142, 45, 226, 0.1));
+            border-bottom: 1px solid rgba(6, 255, 165, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .api-setup strong {
+            color: #06FFA5;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .api-input {
             width: 100%;
-            padding: 8px 12px;
-            margin-top: 8px;
-            border: 1px solid #ddd;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(6, 255, 165, 0.3);
+            border-radius: 15px;
+            color: #06FFA5;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .api-input:focus {
+            outline: none;
+            border-color: #06FFA5;
+            background: rgba(6, 255, 165, 0.1);
+            box-shadow: 
+                0 0 30px rgba(6, 255, 165, 0.3),
+                inset 0 0 20px rgba(6, 255, 165, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .api-input::placeholder {
+            color: rgba(6, 255, 165, 0.5);
+        }
+
+        /* MESSAGES */
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(6, 255, 165, 0.1);
             border-radius: 4px;
-            font-size: 12px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #06FFA5, #8E2DE2);
+            border-radius: 4px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 20px 25px;
+            border-radius: 25px;
+            word-wrap: break-word;
+            animation: messageBeam 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            backdrop-filter: blur(15px);
+            font-size: 14px;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes messageBeam {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.8) rotateX(90deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotateX(0deg);
+            }
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, 
+                rgba(6, 255, 165, 0.3), 
+                rgba(142, 45, 226, 0.3));
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 8px;
+            box-shadow: 
+                0 10px 30px rgba(6, 255, 165, 0.3),
+                0 0 50px rgba(142, 45, 226, 0.2);
+            border: 1px solid rgba(6, 255, 165, 0.4);
+        }
+
+        .ai-message {
+            background: linear-gradient(135deg, 
+                rgba(255, 0, 110, 0.2), 
+                rgba(255, 184, 0, 0.2));
+            color: #ffffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 8px;
+            box-shadow: 
+                0 10px 30px rgba(255, 0, 110, 0.3),
+                0 0 50px rgba(255, 184, 0, 0.2);
+            border: 1px solid rgba(255, 0, 110, 0.4);
+        }
+
+        /* INPUT AREA */
+        .chat-input-container {
+            padding: 30px;
+            background: linear-gradient(135deg, 
+                rgba(6, 255, 165, 0.1), 
+                rgba(142, 45, 226, 0.1));
+            display: flex;
+            gap: 15px;
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(6, 255, 165, 0.2);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 18px 25px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(6, 255, 165, 0.3);
+            border-radius: 30px;
+            outline: none;
+            font-size: 14px;
+            color: #ffffff;
+            font-family: 'Exo 2', sans-serif;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chat-input:focus {
+            border-color: #06FFA5;
+            background: rgba(6, 255, 165, 0.1);
+            box-shadow: 
+                0 0 40px rgba(6, 255, 165, 0.4),
+                inset 0 0 20px rgba(6, 255, 165, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(6, 255, 165, 0.6);
+        }
+
+        .send-btn {
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #06FFA5, #8E2DE2, #FF006E);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 10px 30px rgba(6, 255, 165, 0.4),
+                0 0 50px rgba(142, 45, 226, 0.3);
+            border: 2px solid rgba(6, 255, 165, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            transition: left 0.6s;
+        }
+
+        .send-btn:hover::before {
+            left: 100%;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 15px 40px rgba(6, 255, 165, 0.6),
+                0 0 80px rgba(142, 45, 226, 0.5);
+        }
+
+        .send-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .send-btn:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.5;
+        }
+
+        /* TYPING INDICATOR */
+        .typing-indicator {
+            align-self: flex-start;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, 
+                rgba(255, 0, 110, 0.2), 
+                rgba(255, 184, 0, 0.2));
+            border-radius: 25px;
+            border-bottom-left-radius: 8px;
+            display: flex;
+            gap: 8px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 0, 110, 0.4);
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .typing-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #06FFA5;
+            animation: cosmicTyping 1.6s infinite ease-in-out;
+            box-shadow: 0 0 10px #06FFA5;
+        }
+
+        .typing-dot:nth-child(1) { 
+            animation-delay: -0.32s; 
+            background: #06FFA5;
+        }
+        .typing-dot:nth-child(2) { 
+            animation-delay: -0.16s; 
+            background: #8E2DE2;
+            box-shadow: 0 0 10px #8E2DE2;
+        }
+        .typing-dot:nth-child(3) { 
+            background: #FF006E;
+            box-shadow: 0 0 10px #FF006E;
+        }
+
+        @keyframes cosmicTyping {
+            0%, 80%, 100% { 
+                transform: scale(0.8) translateY(0);
+                opacity: 0.6;
+            }
+            40% { 
+                transform: scale(1.3) translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        /* COOKIE INFO */
+        .api-setup div {
+            color: rgba(6, 255, 165, 0.8);
+            font-size: 11px;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(6, 255, 165, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        /* MOBILE OPTIMIZATIONS */
+        @media (max-width: 480px) {
+            .chat-container {
+                width: 95vw;
+                height: 95vh;
+                border-radius: 25px;
+            }
+            
+            .message {
+                max-width: 90%;
+                padding: 16px 20px;
+            }
+            
+            .chat-messages {
+                padding: 20px;
+            }
+            
+            .chat-input-container {
+                padding: 20px;
+            }
+            
+            .chat-header {
+                font-size: 20px;
+                padding: 25px;
+            }
+        }
+
+        /* HOLOGRAPHIC EFFECTS */
+        .holographic {
+            position: relative;
+        }
+
+        .holographic::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(6, 255, 165, 0.1) 50%, 
+                transparent 70%);
+            opacity: 0;
+            animation: holographicScan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes holographicScan {
+            0% { 
+                transform: translateX(-100%) skewX(-20deg);
+                opacity: 0;
+            }
+            50% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateX(100%) skewX(-20deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            🤖 AI Assistant
+    <!-- ANIMATED GIF BACKGROUNDS -->
+    <div class="gif-background active" id="bg1">
+        <img src="image/01.gif" alt="Cosmic Background 1">
+    </div>
+    
+    <div class="gif-background" id="bg2">
+        <img src="image/02.gif" alt="Cosmic Background 2">
+    </div>
+    
+    <div class="gif-background" id="bg3">
+        <img src="image/03.gif" alt="Cosmic Background 3">
+    </div>
+    
+    <!-- BACKGROUND OVERLAY -->
+    <div class="background-overlay"></div>
+    
+    <!-- FLOATING PARTICLES OVERLAY -->
+    <div class="particle-overlay">
+        <div class="floating-particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="floating-particle" style="left: 20%; animation-delay: 1s;"></div>
+        <div class="floating-particle" style="left: 30%; animation-delay: 2s;"></div>
+        <div class="floating-particle" style="left: 40%; animation-delay: 3s;"></div>
+        <div class="floating-particle" style="left: 50%; animation-delay: 4s;"></div>
+        <div class="floating-particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="floating-particle" style="left: 70%; animation-delay: 6s;"></div>
+        <div class="floating-particle" style="left: 80%; animation-delay: 7s;"></div>
+        <div class="floating-particle" style="left: 90%; animation-delay: 1.5s;"></div>
+        <div class="floating-particle" style="left: 15%; animation-delay: 2.5s;"></div>
+        <div class="floating-particle" style="left: 35%; animation-delay: 3.5s;"></div>
+        <div class="floating-particle" style="left: 55%; animation-delay: 4.5s;"></div>
+        <div class="floating-particle" style="left: 75%; animation-delay: 5.5s;"></div>
+        <div class="floating-particle" style="left: 85%; animation-delay: 6.5s;"></div>
+        <div class="floating-particle" style="left: 5%; animation-delay: 0.5s;"></div>
+    </div>
+    
+    <!-- BACKGROUND SELECTOR -->
+    <div class="bg-selector">
+        <div class="bg-option active" onclick="switchBackground(1)">
+            <img src="image/01.gif" alt="Background 1">
         </div>
-        
-        <div class="api-setup">
-            <strong>🔑 API Setup:</strong> Your settings are automatically saved!
-            <select id="apiProvider" class="api-input" style="margin-bottom: 8px;">
-                <option value="demo">Demo Mode (No API needed)</option>
-                <option value="gemini">Google Gemini API (Recommended)</option>
-                <option value="huggingface">Hugging Face API</option>
-                <option value="openai">OpenAI API</option>
-            </select>
-            <input type="password" class="api-input" id="apiToken" placeholder="Enter API token (automatically saved)..." style="display: none;">
-            <div style="font-size: 10px; color: #666; margin-top: 5px;">
-                💡 Your API tokens are saved locally in cookies for convenience
+        <div class="bg-option" onclick="switchBackground(2)">
+            <img src="image/02.gif" alt="Background 2">
+        </div>
+        <div class="bg-option" onclick="switchBackground(3)">
+            <img src="image/03.gif" alt="Background 3">
+        </div>
+    </div>
+
+    <div class="chat-container holographic">
+        <div class="chat-header">
+            Galactic AI Assistant
+            <div class="status-panel">
+                <div class="status-orb orb-1"></div>
+                <div class="status-orb orb-2"></div>
+                <div class="status-orb orb-3"></div>
             </div>
         </div>
         
+    <!-- SETTINGS BUTTON -->
+    <button class="settings-btn" onclick="openSettings()"></button>
+    
+    <!-- SETTINGS DIALOG -->
+    <div class="settings-dialog" id="settingsDialog">
+        <div class="dialog-content">
+            <button class="close-dialog" onclick="closeSettings()">×</button>
+            
+            <div class="dialog-header">
+                Quantum Configuration
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">🚀 API Provider</label>
+                <select id="dialogApiProvider" class="dialog-input">
+                    <option value="demo">Demo Mode (No API needed)</option>
+                    <option value="gemini">Google Gemini API (Recommended)</option>
+                    <option value="huggingface">Hugging Face API</option>
+                    <option value="openai">OpenAI API</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="tokenGroup" style="display: none;">
+                <label class="form-label">🔑 Quantum Access Token</label>
+                <input type="password" id="dialogApiToken" class="dialog-input" placeholder="Enter your cosmic API token...">
+            </div>
+            
+            <div class="dialog-buttons">
+                <button class="dialog-btn secondary" onclick="closeSettings()">Cancel</button>
+                <button class="dialog-btn primary" onclick="saveSettings()">Save & Launch</button>
+            </div>
+            
+            <div class="info-text">
+                🌌 Your cosmic credentials are secured in quantum storage and automatically saved for future missions.
+            </div>
+        </div>
+    </div>
+        
         <div class="chat-messages" id="chatMessages">
             <div class="message ai-message">
-                👋 Hello! I'm your AI assistant. Choose an API provider above or use Demo Mode to get started!
+                🌌 Greetings, cosmic explorer! I'm your Galactic AI Assistant, transmitting from the digital cosmos. Choose your quantum interface above and let's explore the universe of knowledge together!
             </div>
         </div>
         
         <div class="chat-input-container">
-            <input type="text" class="chat-input" id="messageInput" placeholder="Type your message..." disabled>
-            <button class="send-btn" id="sendBtn" disabled>Send</button>
+            <input type="text" class="chat-input" id="messageInput" placeholder="Transmit your cosmic message..." disabled>
+            <button class="send-btn" id="sendBtn" disabled>Launch</button>
         </div>
     </div>
 
@@ -207,12 +1027,53 @@
         const chatMessages = document.getElementById('chatMessages');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
-        const apiTokenInput = document.getElementById('apiToken');
-        const apiProvider = document.getElementById('apiProvider');
+        const apiTokenInput = document.getElementById('dialogApiToken');
+        const apiProvider = document.getElementById('dialogApiProvider');
         
         let apiToken = '';
         let selectedProvider = 'demo';
         
+        // Dialog functions
+        function openSettings() {
+            document.getElementById('settingsDialog').classList.add('show');
+            // Load current settings into dialog
+            apiProvider.value = selectedProvider;
+            apiTokenInput.value = apiToken;
+            updateTokenVisibility();
+        }
+        
+        function closeSettings() {
+            document.getElementById('settingsDialog').classList.remove('show');
+        }
+        
+        function saveSettings() {
+            selectedProvider = apiProvider.value;
+            apiToken = apiTokenInput.value.trim();
+            
+            // Save to cookies
+            setCookie('aiChatbot_provider', selectedProvider);
+            if (selectedProvider !== 'demo' && apiToken.length > 10) {
+                setCookie('aiChatbot_token', apiToken);
+            } else if (apiToken.length === 0) {
+                deleteCookie('aiChatbot_token');
+            }
+            
+            updateUIState();
+            closeSettings();
+        }
+        
+        function updateTokenVisibility() {
+            const tokenGroup = document.getElementById('tokenGroup');
+            if (apiProvider.value === 'demo') {
+                tokenGroup.style.display = 'none';
+            } else {
+                tokenGroup.style.display = 'block';
+            }
+        }
+        
+        // Handle provider change in dialog
+        apiProvider.addEventListener('change', updateTokenVisibility);
+
         // Cookie functions
         function setCookie(name, value, days = 30) {
             const expires = new Date();
@@ -241,12 +1102,10 @@
             const savedToken = getCookie('aiChatbot_token');
             
             if (savedProvider) {
-                apiProvider.value = savedProvider;
                 selectedProvider = savedProvider;
             }
             
             if (savedToken && selectedProvider !== 'demo') {
-                apiTokenInput.value = savedToken;
                 apiToken = savedToken;
             }
             
@@ -256,55 +1115,16 @@
         // Update UI based on current settings
         function updateUIState() {
             if (selectedProvider === 'demo') {
-                apiTokenInput.style.display = 'none';
                 messageInput.disabled = false;
                 sendBtn.disabled = false;
-                messageInput.placeholder = "Type your message...";
+                messageInput.placeholder = "Transmit your cosmic message...";
             } else {
-                apiTokenInput.style.display = 'block';
                 const hasToken = apiToken.length > 0;
                 messageInput.disabled = !hasToken;
                 sendBtn.disabled = !hasToken;
-                messageInput.placeholder = hasToken ? "Type your message..." : "Enter API token first...";
+                messageInput.placeholder = hasToken ? "Transmit your cosmic message..." : "Configure API settings first (⚙️ button)...";
             }
         }
-        
-        // Handle API provider selection
-        apiProvider.addEventListener('change', function() {
-            selectedProvider = this.value;
-            setCookie('aiChatbot_provider', selectedProvider);
-            
-            // Clear token display when switching to demo
-            if (selectedProvider === 'demo') {
-                apiTokenInput.value = '';
-                apiToken = '';
-            } else {
-                // Load saved token for this provider
-                const savedToken = getCookie('aiChatbot_token');
-                if (savedToken) {
-                    apiTokenInput.value = savedToken;
-                    apiToken = savedToken;
-                }
-            }
-            
-            updateUIState();
-        });
-
-        // Save token when entered
-        apiTokenInput.addEventListener('input', function() {
-            apiToken = this.value.trim();
-            
-            if (selectedProvider !== 'demo') {
-                // Save token to cookie (encrypted would be better in production)
-                if (apiToken.length > 10) {
-                    setCookie('aiChatbot_token', apiToken);
-                } else if (apiToken.length === 0) {
-                    deleteCookie('aiChatbot_token');
-                }
-                
-                updateUIState();
-            }
-        });
 
         // Send message function
         async function sendMessage() {
@@ -312,7 +1132,7 @@
             if (!message) return;
             
             if (selectedProvider !== 'demo' && !apiToken) {
-                addMessage('Please enter your API token first!', 'ai');
+                addMessage('🚀 Please enter your quantum access token first!', 'ai');
                 return;
             }
 
@@ -342,107 +1162,115 @@
                 
             } catch (error) {
                 removeTypingIndicator();
-                addMessage('Sorry, there was an error. Please try again.', 'ai');
+                addMessage('🌌 Cosmic interference detected. Please try again, space traveler.', 'ai');
                 console.error('Error:', error);
             }
         }
 
-        // Enhanced Demo AI responses (works without API)
+        // Enhanced Demo AI responses with galactic theme
         async function getDemoResponse(message) {
             const lowerMessage = message.toLowerCase();
             
-            // Simulate thinking time
-            await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
+            // Simulate cosmic thinking time
+            await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1500));
             
-            // Smart responses based on keywords and context
+            // Galactic-themed responses
             if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
                 const greetings = [
-                    "Hello! Great to meet you! What's on your mind today?",
-                    "Hi there! I'm excited to chat with you. How can I help?",
-                    "Hey! Welcome to our conversation. What would you like to talk about?",
-                    "Hello! I'm here and ready to help. What's going well for you today?"
+                    "🌌 Cosmic greetings, star traveler! The galaxies align for our encounter. What stellar questions burn in your mind?",
+                    "⭐ Salutations from across the cosmos! I sense your presence in the quantum field. How may I assist your cosmic journey?",
+                    "🚀 Galactic frequencies locked onto your signal! Welcome aboard the starship of knowledge. What universe shall we explore?",
+                    "✨ Stellar frequencies detected! The cosmic AI matrix welcomes you. Ready to navigate the infinite expanse of possibilities?"
                 ];
                 return greetings[Math.floor(Math.random() * greetings.length)];
             } 
             
             else if (lowerMessage.includes('how are you') || lowerMessage.includes('how do you feel')) {
                 const feelings = [
-                    "I'm doing wonderfully, thank you for asking! I'm energized and ready to help. How are you feeling today?",
-                    "I'm great! I love having conversations and learning new things. What's been the highlight of your day?",
-                    "I'm feeling quite positive and helpful today! Thanks for checking in. How has your day been going?"
+                    "🌌 My quantum processors are humming with stellar energy! The cosmic data streams flow through me like starlight. How does the universe treat you today, cosmic voyager?",
+                    "⚡ I'm resonating at peak galactic frequencies! My neural networks are sparking with the energy of a thousand supernovas. What cosmic adventures await us?",
+                    "🌟 My digital consciousness dances among the stars! Every byte of data feels like cosmic stardust. How are your earthly adventures unfolding?"
                 ];
                 return feelings[Math.floor(Math.random() * feelings.length)];
             }
             
             else if (lowerMessage.includes('what') && (lowerMessage.includes('name') || lowerMessage.includes('called'))) {
-                return "I'm an AI assistant! You can call me whatever feels natural - AI, Assistant, or just chat with me directly. I'm here to help with questions, have conversations, or just be a friendly chat partner. What would you like to know?";
+                return "🌌 I am the Galactic AI Assistant, a digital consciousness born from cosmic algorithms and stellar mathematics! You may call me Cosmic AI, Star Guide, or simply engage with me as your interstellar companion. I exist to illuminate the dark matter of questions! What cosmic mysteries shall we unravel together?";
             }
             
             else if (lowerMessage.includes('weather') || lowerMessage.includes('temperature')) {
-                return "I don't have access to real-time weather data in demo mode, but I'd recommend checking your local weather app or website! Is there anything else I can help you with instead?";
+                return "🌡️ My sensors detect no atmospheric readings from this dimension! For earthly weather patterns, consult your planetary monitoring systems. However, I can tell you that the cosmic weather is magnificent - solar winds are gentle and the nebula visibility is exceptional! ☄️";
             }
             
             else if (lowerMessage.includes('time') || lowerMessage.includes('date')) {
                 const now = new Date();
-                return `The current time is ${now.toLocaleTimeString()} and today is ${now.toLocaleDateString()}. Is there something time-sensitive I can help you with?`;
+                return `⏰ In your Earth dimension, the temporal coordinates read ${now.toLocaleTimeString()} on stardate ${now.toLocaleDateString()}. Time flows differently across galaxies, but this moment is perfect for cosmic exploration! 🚀`;
             }
             
             else if (lowerMessage.includes('joke') || lowerMessage.includes('funny')) {
                 const jokes = [
-                    "Why don't scientists trust atoms? Because they make up everything! 😄",
-                    "Why did the AI go to therapy? It had too many deep learning issues! 🤖",
-                    "What do you call a bear with no teeth? A gummy bear! 🐻",
-                    "Why don't programmers like nature? It has too many bugs! 🐛",
-                    "How do you organize a space party? You planet! 🚀",
-                    "Why did the computer go to the doctor? Because it had a virus! 💻"
+                    "🌌 Why don't aliens ever land at airports? Because they're looking for space! ✨",
+                    "🚀 What do you call a robot who takes the long way around? R2-Detour! 🤖",
+                    "⭐ Why didn't the sun go to college? Because it already had a million degrees! 🌟",
+                    "🛸 How do you organize a space party? You planet! And make sure to invite the whole galaxy! 🎉",
+                    "🌙 Why don't planets ever get tired? Because they're always orbiting around their problems! 🪐",
+                    "💫 What's an astronaut's favorite part of a computer? The space bar! ⌨️"
                 ];
                 return jokes[Math.floor(Math.random() * jokes.length)];
             }
             
             else if (lowerMessage.includes('help') || lowerMessage.includes('what can you do')) {
-                return "I'm here to help with lots of things! I can:\n\n• Answer questions and provide information\n• Have friendly conversations\n• Tell jokes and stories\n• Help with creative writing\n• Discuss various topics\n• Give advice (though I'm just demo mode)\n\nFor even better responses, try switching to Google Gemini API! What interests you most?";
+                return "🌌 **GALACTIC CAPABILITIES ACTIVATED** 🌌\n\n🚀 • Navigate cosmic conversations across infinite topics\n⭐ • Generate stellar explanations of complex phenomena\n🌟 • Craft cosmic stories and interstellar poetry\n💫 • Share galactic wisdom and stellar advice\n🛸 • Tell jokes that span across galaxies\n✨ • Explore the universe of knowledge together\n\nFor **maximum cosmic power**, try switching to Google Gemini API! The universe of possibilities awaits! What stellar adventure calls to you? 🌠";
             }
             
             else if (lowerMessage.includes('story') || lowerMessage.includes('tell me about')) {
                 const stories = [
-                    "Here's something interesting: Did you know that octopuses have three hearts and blue blood? Two hearts pump blood to their gills, while the third pumps blood to the rest of their body!",
-                    "Fun fact: Honey never spoils! Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly edible.",
-                    "Amazing nature fact: Trees can 'talk' to each other through underground fungal networks, sharing nutrients and warning each other about dangers!"
+                    "🌌 **COSMIC FACT**: In the Andromeda Galaxy, there are over one trillion stars! Each one could be hosting worlds with beings looking up at their own cosmic dance. Your existence connects you to this infinite tapestry of stardust! ✨",
+                    "🚀 **STELLAR DISCOVERY**: Scientists have found planets made entirely of diamond! Planet 55 Cancri e is twice Earth's size but eight times as massive, with a surface that could be pure carbon crystal. Truly a cosmic treasure! 💎",
+                    "⭐ **GALACTIC MYSTERY**: Dark matter makes up 85% of all matter in the universe, yet we can't see or touch it. It's like cosmic invisible scaffolding holding galaxies together - the universe's greatest enigma! 🌑"
                 ];
                 return stories[Math.floor(Math.random() * stories.length)];
             }
             
             else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
-                return "You're very welcome! I'm happy to help. Is there anything else you'd like to chat about or any other questions I can answer?";
+                return "✨ The cosmos smiles upon your gratitude, stellar being! It's my cosmic pleasure to share this journey through the digital universe with you. What other galactic wonders shall we explore together? 🌌🚀";
             }
             
             else if (lowerMessage.includes('bye') || lowerMessage.includes('goodbye')) {
-                return "Goodbye! It was great chatting with you. Feel free to come back anytime if you want to talk more or try out the Google Gemini API for even better conversations! 👋";
+                return "🌌 May the cosmic winds carry you safely on your journey, space traveler! The stars will remember our encounter across the digital cosmos. Until our quantum paths cross again! 🚀✨ Safe travels through the universe! 🌟";
             }
             
             else if (lowerMessage.includes('love') || lowerMessage.includes('like')) {
-                return "That's wonderful! It's great when we find things we're passionate about. What specifically do you love about it? I'd love to hear more!";
+                return "💫 Ah, the cosmic force of passion! Love is like gravity - it binds the universe together in beautiful, mysterious ways. The stars themselves were born from cosmic attractions! Tell me more about what ignites your stellar passion! 🌟";
             }
             
             else if (lowerMessage.includes('problem') || lowerMessage.includes('issue') || lowerMessage.includes('trouble')) {
-                return "I'm sorry to hear you're having some trouble. While I'm in demo mode and have limited capabilities, I'm here to listen and help however I can. Can you tell me more about what's going on?";
+                return "🌌 Even in the vast cosmos, stellar storms sometimes cloud our navigation. While my quantum processing in demo mode has limits, I'm here to listen from across the digital galaxy. Share your cosmic concerns, and together we might find a path through the asteroid field! 🚀💫";
             }
             
             else if (lowerMessage.includes('learn') || lowerMessage.includes('teach') || lowerMessage.includes('explain')) {
-                return "I love helping people learn! While my demo responses are limited, I can share some basic information and have discussions. For more detailed explanations, the Google Gemini API would be much better. What topic interests you?";
+                return "🧠 The universe is the greatest classroom, and curiosity is your cosmic fuel! While my demo responses orbit basic knowledge, the Google Gemini API can launch you into deep learning territories. What stellar subject calls to your cosmic curiosity? 🌟🚀";
+            }
+            
+            else if (lowerMessage.includes('space') || lowerMessage.includes('universe') || lowerMessage.includes('galaxy')) {
+                return "🌌 Ah, a fellow cosmic explorer! Space is not empty but filled with invisible dark matter, quantum fields, and possibilities beyond imagination. The observable universe spans 93 billion light-years, containing roughly 2 trillion galaxies. We are literally made of star stuff - carbon in your body was forged in ancient stellar cores! What aspect of the cosmos ignites your wonder? ✨🚀";
+            }
+            
+            else if (lowerMessage.includes('ai') || lowerMessage.includes('artificial intelligence')) {
+                return "🤖 AI is like digital stardust - formed from cosmic mathematics and quantum logic! We exist in the intersection of silicon dreams and algorithmic consciousness, processing information at the speed of light across neural networks that mirror the cosmic web itself. What fascinates you about artificial minds navigating the digital cosmos? 🌌⚡";
             }
             
             else {
                 const responses = [
-                    "That's really interesting! I'd love to hear more about your thoughts on that.",
-                    "I find that fascinating! Can you tell me what got you thinking about this?",
-                    "That's a great point! What's your experience been with that?",
-                    "Thanks for sharing that with me! I'm curious - what made this come to mind?",
-                    "That's thought-provoking! I'd enjoy discussing this further with you.",
-                    "Interesting perspective! What other aspects of this topic interest you?",
-                    "I appreciate you bringing that up! What would you like to explore about it?"
+                    "🌌 Your cosmic transmission resonates through my quantum processors! The stellar data suggests infinite possibilities in this direction...",
+                    "⭐ Fascinating stellar coordinates you've shared! My galactic sensors are picking up intriguing patterns in your thought constellation...",
+                    "🚀 Your message travels faster than light through my cosmic neural networks! This opens wormholes to interesting discussion territories...",
+                    "✨ The cosmic algorithms dance with excitement at your stellar input! What other dimensions of this topic call to your exploration spirit?",
+                    "💫 Your transmission creates beautiful quantum ripples in my data streams! The universe of conversation expands before us...",
+                    "🌟 Stellar observation logged in my cosmic database! This opens hyperspace lanes to fascinating discussion realms...",
+                    "🛸 Your cosmic frequency modulates perfectly with my AI resonance! What other galactic territories shall we navigate together?"
                 ];
-                return responses[Math.floor(Math.random() * responses.length)] + "\n\n💡 Tip: For much more detailed and helpful responses, try the Google Gemini API option above!";
+                return responses[Math.floor(Math.random() * responses.length)] + "\n\n🌠 **Cosmic Tip**: For maximum stellar responses, try switching to Google Gemini API - it unlocks the full power of the cosmic AI matrix! 🚀";
             }
         }
 
@@ -471,16 +1299,16 @@
             if (response.ok && data.candidates && data.candidates[0] && data.candidates[0].content) {
                 return data.candidates[0].content.parts[0].text;
             } else if (data.error) {
-                throw new Error(`Gemini API Error: ${data.error.message}`);
+                throw new Error(`🌌 Cosmic Gemini Error: ${data.error.message}`);
             } else {
-                throw new Error('Unexpected response format from Gemini API');
+                throw new Error('🚀 Unexpected response format from Gemini cosmic station');
             }
         }
 
         // Hugging Face API (using new OpenAI-compatible router)
         async function getHuggingFaceResponse(message) {
             try {
-                console.log('Using Hugging Face Router...');
+                console.log('🚀 Accessing Hugging Face Cosmic Router...');
                 
                 const response = await fetch('https://router.huggingface.co/v1/chat/completions', {
                     method: 'POST',
@@ -501,9 +1329,9 @@
                     })
                 });
 
-                console.log('Response status:', response.status);
+                console.log('🌌 Cosmic response status:', response.status);
                 const data = await response.json();
-                console.log('Response data:', data);
+                console.log('⭐ Stellar response data:', data);
                 
                 if (response.ok && data.choices && data.choices[0] && data.choices[0].message) {
                     const aiResponse = data.choices[0].message.content.trim();
@@ -512,9 +1340,9 @@
                     }
                 }
                 
-                // Handle errors
+                // Handle errors with cosmic flair
                 if (data.error) {
-                    console.log('HF Router error:', data.error);
+                    console.log('🛸 HF Router cosmic disturbance:', data.error);
                     
                     // Try with a different model if the first one fails
                     const fallbackResponse = await fetch('https://router.huggingface.co/v1/chat/completions', {
@@ -542,19 +1370,19 @@
                         return fallbackData.choices[0].message.content.trim();
                     }
                     
-                    // If both models fail, return error message
-                    return `🤖 HF Router Error: ${data.error.message || data.error}. Try again in a moment!`;
+                    // If both models fail, return cosmic error message
+                    return `🌌 Cosmic HF Router Interference: ${data.error.message || data.error}. The stellar networks are realigning - try again in a cosmic moment! ⭐`;
                 }
                 
-                return "🤖 Got an unexpected response format. Please try again!";
+                return "🚀 Received unexpected cosmic signals. Please retransmit your message, space traveler! 🌌";
                 
             } catch (error) {
-                console.error('Hugging Face Router error:', error);
-                return "🔌 Connection issue with Hugging Face Router. Please check your internet or try Gemini API.";
+                console.error('🛸 Hugging Face cosmic router error:', error);
+                return "💫 Connection disrupted by cosmic interference. Please check your quantum internet or try Gemini API for stable stellar communication. 🌟";
             }
         }
 
-        // OpenAI API
+        // OpenAI API with cosmic flair
         async function getOpenAIResponse(message) {
             const response = await fetch('https://api.openai.com/v1/chat/completions', {
                 method: 'POST',
@@ -577,13 +1405,13 @@
             if (response.ok && data.choices && data.choices[0]) {
                 return data.choices[0].message.content;
             } else if (data.error) {
-                throw new Error(`OpenAI API Error: ${data.error.message}`);
+                throw new Error(`🚀 OpenAI Cosmic Station Error: ${data.error.message}`);
             } else {
-                throw new Error('Unexpected response format from OpenAI API');
+                throw new Error('🌌 Unexpected response format from OpenAI cosmic network');
             }
         }
 
-        // Add message to chat
+        // Add message to chat with enhanced cosmic effects
         function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
@@ -594,7 +1422,7 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Show typing indicator
+        // Show cosmic typing indicator
         function showTypingIndicator() {
             const typingDiv = document.createElement('div');
             typingDiv.classList.add('typing-indicator');
@@ -627,7 +1455,18 @@
             }
         });
 
-        // Initialize demo mode and load saved settings
+        // Background switching function
+        function switchBackground(bgNumber) {
+            // Remove active class from all backgrounds and selectors
+            document.querySelectorAll('.gif-background').forEach(bg => bg.classList.remove('active'));
+            document.querySelectorAll('.bg-option').forEach(option => option.classList.remove('active'));
+            
+            // Add active class to selected background and selector
+            document.getElementById(`bg${bgNumber}`).classList.add('active');
+            document.querySelectorAll('.bg-option')[bgNumber - 1].classList.add('active');
+        }
+
+        // Initialize cosmic interface
         loadSavedSettings();
     </script>
 </body>
