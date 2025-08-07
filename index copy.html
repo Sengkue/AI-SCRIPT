@@ -482,14 +482,60 @@
             box-shadow: 0 0 15px rgba(6, 255, 165, 0.8);
         }
 
-        .volume-slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: linear-gradient(135deg, #06FFA5, #8E2DE2);
-            border-radius: 50%;
+        /* BACKGROUND PREVIEW OPTIONS */
+        .background-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .bg-preview-option {
+            position: relative;
+            height: 80px;
+            border-radius: 12px;
+            overflow: hidden;
             cursor: pointer;
-            border: none;
-            box-shadow: 0 0 10px rgba(6, 255, 165, 0.5);
+            border: 2px solid rgba(6, 255, 165, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bg-preview-option:hover {
+            border-color: #06FFA5;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(6, 255, 165, 0.4);
+        }
+
+        .bg-preview-option.active {
+            border-color: #06FFA5;
+            box-shadow: 0 0 25px rgba(6, 255, 165, 0.6);
+        }
+
+        .bg-preview-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7) contrast(1.1);
+        }
+
+        .bg-preview-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 8px;
+            color: #06FFA5;
+            font-size: 10px;
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bg-preview-option.active .bg-preview-overlay {
+            background: linear-gradient(transparent, rgba(6, 255, 165, 0.3));
         }
 
         .info-text {
@@ -985,29 +1031,304 @@
         }
 
         /* MOBILE OPTIMIZATIONS */
-        @media (max-width: 480px) {
-            .chat-container {
-                width: 95vw;
-                height: 95vh;
-                border-radius: 25px;
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
             }
-            
+
+            .chat-container {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                max-width: none;
+                max-height: none;
+                min-height: 100vh;
+            }
+
+            .chat-container::before {
+                border-radius: 0;
+            }
+
+            .chat-header {
+                padding: 20px 15px;
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+
+            .chat-header::before {
+                font-size: 24px;
+                margin-bottom: 6px;
+            }
+
+            .status-panel {
+                top: 12px;
+                right: 12px;
+                gap: 6px;
+            }
+
+            .status-orb {
+                width: 10px;
+                height: 10px;
+            }
+
+            .chat-messages {
+                padding: 15px;
+                gap: 12px;
+            }
+
             .message {
                 max-width: 90%;
-                padding: 16px 20px;
+                padding: 14px 18px;
+                border-radius: 18px;
+                font-size: 14px;
+                line-height: 1.5;
             }
-            
-            .chat-messages {
-                padding: 20px;
-            }
-            
+
             .chat-input-container {
+                padding: 15px;
+                gap: 10px;
+            }
+
+            .chat-input {
+                padding: 14px 18px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .send-btn {
+                padding: 14px 20px;
+                font-size: 12px;
+                min-width: 80px;
+            }
+
+            /* MOBILE SETTINGS BUTTON */
+            .settings-btn {
+                top: 15px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            /* MOBILE BACKGROUND SELECTOR - HIDDEN */
+            .bg-selector {
+                display: none;
+            }
+
+            /* MOBILE SETTINGS DIALOG */
+            .dialog-content {
+                margin: 20px;
+                padding: 25px;
+                border-radius: 15px;
+                max-width: none;
+                width: calc(100% - 40px);
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .dialog-content::before {
+                border-radius: 15px;
+            }
+
+            .dialog-header {
+                font-size: 18px;
+                margin-bottom: 20px;
+                letter-spacing: 1px;
+            }
+
+            .dialog-header::before {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .form-group {
+                margin-bottom: 18px;
+            }
+
+            .dialog-input {
+                padding: 12px 16px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .dialog-buttons {
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 25px;
+            }
+
+            .dialog-btn {
+                padding: 14px 20px;
+                font-size: 13px;
+            }
+
+            .close-dialog {
+                top: 12px;
+                right: 12px;
+                font-size: 20px;
+                padding: 8px;
+            }
+
+            /* MOBILE AUDIO CONTROLS */
+            .audio-toggle {
+                padding: 12px 16px;
+            }
+
+            .audio-icon {
+                font-size: 18px;
+            }
+
+            .audio-text {
+                font-size: 14px;
+            }
+
+            .audio-status {
+                font-size: 11px;
+            }
+
+            .volume-control {
+                margin-top: 12px;
+            }
+
+            /* MOBILE PARTICLES */
+            .floating-particle {
+                width: 3px;
+                height: 3px;
+            }
+
+            /* MOBILE TYPING INDICATOR */
+            .typing-indicator {
+                padding: 14px 18px;
+            }
+
+            .typing-dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        /* EXTRA SMALL SCREENS */
+        @media (max-width: 480px) {
+            .chat-header {
+                padding: 18px 12px;
+                font-size: 16px;
+            }
+
+            .chat-messages {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .message {
+                max-width: 92%;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .chat-input-container {
+                padding: 12px;
+            }
+
+            .send-btn {
+                padding: 12px 16px;
+                font-size: 11px;
+                min-width: 70px;
+            }
+
+            .dialog-content {
+                margin: 15px;
                 padding: 20px;
             }
-            
+
+            .bg-option {
+                width: 45px;
+                height: 30px;
+            }
+
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+
+        /* LANDSCAPE MOBILE */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .chat-container {
+                height: 100vh;
+            }
+
             .chat-header {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .chat-header::before {
                 font-size: 20px;
-                padding: 25px;
+                margin-bottom: 4px;
+            }
+
+            .chat-messages {
+                padding: 12px;
+            }
+
+            .chat-input-container {
+                padding: 12px;
+            }
+
+            .dialog-content {
+                max-height: 85vh;
+                margin: 10px;
+            }
+        }
+
+        /* TOUCH OPTIMIZATIONS */
+        @media (hover: none) {
+            .bg-option:hover,
+            .settings-btn:hover,
+            .send-btn:hover,
+            .dialog-btn:hover {
+                transform: none;
+            }
+
+            .bg-option:active,
+            .settings-btn:active,
+            .send-btn:active,
+            .dialog-btn:active {
+                transform: scale(0.95);
+                transition: transform 0.1s;
+            }
+
+            /* Larger touch targets */
+            .settings-btn,
+            .bg-option,
+            .close-dialog {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* MOBILE SAFE AREAS (iPhone X+) */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .chat-container {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .settings-btn {
+                top: calc(15px + env(safe-area-inset-top));
+            }
+
+            .bg-selector {
+                top: calc(15px + env(safe-area-inset-top));
+            }
+        }
+
+        /* PREVENT ZOOM ON INPUT FOCUS (iOS) */
+        @media (max-width: 768px) {
+            input[type="text"],
+            input[type="password"],
+            select,
+            textarea {
+                font-size: 16px !important;
             }
         }
 
@@ -1133,6 +1454,29 @@
                 <input type="password" id="dialogApiToken" class="dialog-input" placeholder="Enter your cosmic API token...">
             </div>
             
+            <div class="form-group">
+                <label class="form-label">🌌 Galactic Background</label>
+                <div class="background-options">
+                    <div class="bg-preview-option" data-bg="1" onclick="selectBackground(1)">
+                        <img src="image/01.gif" alt="Background 1">
+                        <div class="bg-preview-overlay">
+                            <span>Cosmic Swirl</span>
+                        </div>
+                    </div>
+                    <div class="bg-preview-option" data-bg="2" onclick="selectBackground(2)">
+                        <img src="image/02.gif" alt="Background 2">
+                        <div class="bg-preview-overlay">
+                            <span>Space Tunnel</span>
+                        </div>
+                    </div>
+                    <div class="bg-preview-option" data-bg="3" onclick="selectBackground(3)">
+                        <img src="image/03.gif" alt="Background 3">
+                        <div class="bg-preview-overlay">
+                            <span>Nebula Waves</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <label class="form-label">🎵 Galactic Audio</label>
                 <div class="audio-toggle" id="audioToggle" onclick="toggleAudio()">
