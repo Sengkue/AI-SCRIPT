@@ -985,29 +985,312 @@
         }
 
         /* MOBILE OPTIMIZATIONS */
-        @media (max-width: 480px) {
-            .chat-container {
-                width: 95vw;
-                height: 95vh;
-                border-radius: 25px;
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
             }
-            
+
+            .chat-container {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                max-width: none;
+                max-height: none;
+                min-height: 100vh;
+            }
+
+            .chat-container::before {
+                border-radius: 0;
+            }
+
+            .chat-header {
+                padding: 20px 15px;
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+
+            .chat-header::before {
+                font-size: 24px;
+                margin-bottom: 6px;
+            }
+
+            .status-panel {
+                top: 12px;
+                right: 12px;
+                gap: 6px;
+            }
+
+            .status-orb {
+                width: 10px;
+                height: 10px;
+            }
+
+            .chat-messages {
+                padding: 15px;
+                gap: 12px;
+            }
+
             .message {
                 max-width: 90%;
-                padding: 16px 20px;
+                padding: 14px 18px;
+                border-radius: 18px;
+                font-size: 14px;
+                line-height: 1.5;
             }
-            
-            .chat-messages {
-                padding: 20px;
-            }
-            
+
             .chat-input-container {
+                padding: 15px;
+                gap: 10px;
+            }
+
+            .chat-input {
+                padding: 14px 18px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .send-btn {
+                padding: 14px 20px;
+                font-size: 12px;
+                min-width: 80px;
+            }
+
+            /* MOBILE SETTINGS BUTTON */
+            .settings-btn {
+                top: 15px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            /* MOBILE BACKGROUND SELECTOR */
+            .bg-selector {
+                top: 15px;
+                right: 15px;
+                gap: 8px;
+            }
+
+            .bg-option {
+                width: 50px;
+                height: 35px;
+                border-radius: 6px;
+            }
+
+            /* MOBILE SETTINGS DIALOG */
+            .dialog-content {
+                margin: 20px;
+                padding: 25px;
+                border-radius: 15px;
+                max-width: none;
+                width: calc(100% - 40px);
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .dialog-content::before {
+                border-radius: 15px;
+            }
+
+            .dialog-header {
+                font-size: 18px;
+                margin-bottom: 20px;
+                letter-spacing: 1px;
+            }
+
+            .dialog-header::before {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .form-group {
+                margin-bottom: 18px;
+            }
+
+            .dialog-input {
+                padding: 12px 16px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            .dialog-buttons {
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 25px;
+            }
+
+            .dialog-btn {
+                padding: 14px 20px;
+                font-size: 13px;
+            }
+
+            .close-dialog {
+                top: 12px;
+                right: 12px;
+                font-size: 20px;
+                padding: 8px;
+            }
+
+            /* MOBILE AUDIO CONTROLS */
+            .audio-toggle {
+                padding: 12px 16px;
+            }
+
+            .audio-icon {
+                font-size: 18px;
+            }
+
+            .audio-text {
+                font-size: 14px;
+            }
+
+            .audio-status {
+                font-size: 11px;
+            }
+
+            .volume-control {
+                margin-top: 12px;
+            }
+
+            /* MOBILE PARTICLES */
+            .floating-particle {
+                width: 3px;
+                height: 3px;
+            }
+
+            /* MOBILE TYPING INDICATOR */
+            .typing-indicator {
+                padding: 14px 18px;
+            }
+
+            .typing-dot {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        /* EXTRA SMALL SCREENS */
+        @media (max-width: 480px) {
+            .chat-header {
+                padding: 18px 12px;
+                font-size: 16px;
+            }
+
+            .chat-messages {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .message {
+                max-width: 92%;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+
+            .chat-input-container {
+                padding: 12px;
+            }
+
+            .send-btn {
+                padding: 12px 16px;
+                font-size: 11px;
+                min-width: 70px;
+            }
+
+            .dialog-content {
+                margin: 15px;
                 padding: 20px;
             }
-            
+
+            .bg-option {
+                width: 45px;
+                height: 30px;
+            }
+
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+
+        /* LANDSCAPE MOBILE */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .chat-container {
+                height: 100vh;
+            }
+
             .chat-header {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .chat-header::before {
                 font-size: 20px;
-                padding: 25px;
+                margin-bottom: 4px;
+            }
+
+            .chat-messages {
+                padding: 12px;
+            }
+
+            .chat-input-container {
+                padding: 12px;
+            }
+
+            .dialog-content {
+                max-height: 85vh;
+                margin: 10px;
+            }
+        }
+
+        /* TOUCH OPTIMIZATIONS */
+        @media (hover: none) {
+            .bg-option:hover,
+            .settings-btn:hover,
+            .send-btn:hover,
+            .dialog-btn:hover {
+                transform: none;
+            }
+
+            .bg-option:active,
+            .settings-btn:active,
+            .send-btn:active,
+            .dialog-btn:active {
+                transform: scale(0.95);
+                transition: transform 0.1s;
+            }
+
+            /* Larger touch targets */
+            .settings-btn,
+            .bg-option,
+            .close-dialog {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* MOBILE SAFE AREAS (iPhone X+) */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            .chat-container {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .settings-btn {
+                top: calc(15px + env(safe-area-inset-top));
+            }
+
+            .bg-selector {
+                top: calc(15px + env(safe-area-inset-top));
+            }
+        }
+
+        /* PREVENT ZOOM ON INPUT FOCUS (iOS) */
+        @media (max-width: 768px) {
+            input[type="text"],
+            input[type="password"],
+            select,
+            textarea {
+                font-size: 16px !important;
             }
         }
 
