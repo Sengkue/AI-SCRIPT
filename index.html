@@ -482,60 +482,14 @@
             box-shadow: 0 0 15px rgba(6, 255, 165, 0.8);
         }
 
-        /* BACKGROUND PREVIEW OPTIONS */
-        .background-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 10px;
-        }
-
-        .bg-preview-option {
-            position: relative;
-            height: 80px;
-            border-radius: 12px;
-            overflow: hidden;
+        .volume-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #06FFA5, #8E2DE2);
+            border-radius: 50%;
             cursor: pointer;
-            border: 2px solid rgba(6, 255, 165, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .bg-preview-option:hover {
-            border-color: #06FFA5;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(6, 255, 165, 0.4);
-        }
-
-        .bg-preview-option.active {
-            border-color: #06FFA5;
-            box-shadow: 0 0 25px rgba(6, 255, 165, 0.6);
-        }
-
-        .bg-preview-option img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.7) contrast(1.1);
-        }
-
-        .bg-preview-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-            padding: 8px;
-            color: #06FFA5;
-            font-size: 10px;
-            font-family: 'Orbitron', monospace;
-            text-align: center;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .bg-preview-option.active .bg-preview-overlay {
-            background: linear-gradient(transparent, rgba(6, 255, 165, 0.3));
+            border: none;
+            box-shadow: 0 0 10px rgba(6, 255, 165, 0.5);
         }
 
         .info-text {
@@ -1036,6 +990,16 @@
                 padding: 10px;
             }
 
+            /* HIDE BACKGROUND SELECTOR ON MOBILE */
+            .bg-selector {
+                display: none !important;
+            }
+
+            /* MOBILE DEFAULT BACKGROUND */
+            .gif-background:not(.active) {
+                display: none;
+            }
+
             .chat-container {
                 width: 100vw;
                 height: 100vh;
@@ -1107,11 +1071,6 @@
                 width: 45px;
                 height: 45px;
                 font-size: 18px;
-            }
-
-            /* MOBILE BACKGROUND SELECTOR - HIDDEN */
-            .bg-selector {
-                display: none;
             }
 
             /* MOBILE SETTINGS DIALOG */
@@ -1238,11 +1197,6 @@
                 padding: 20px;
             }
 
-            .bg-option {
-                width: 45px;
-                height: 30px;
-            }
-
             .settings-btn {
                 width: 40px;
                 height: 40px;
@@ -1299,7 +1253,6 @@
 
             /* Larger touch targets */
             .settings-btn,
-            .bg-option,
             .close-dialog {
                 min-height: 44px;
                 min-width: 44px;
@@ -1314,10 +1267,6 @@
             }
 
             .settings-btn {
-                top: calc(15px + env(safe-area-inset-top));
-            }
-
-            .bg-selector {
                 top: calc(15px + env(safe-area-inset-top));
             }
         }
@@ -1454,29 +1403,6 @@
                 <input type="password" id="dialogApiToken" class="dialog-input" placeholder="Enter your cosmic API token...">
             </div>
             
-            <div class="form-group">
-                <label class="form-label">🌌 Galactic Background</label>
-                <div class="background-options">
-                    <div class="bg-preview-option" data-bg="1" onclick="selectBackground(1)">
-                        <img src="image/01.gif" alt="Background 1">
-                        <div class="bg-preview-overlay">
-                            <span>Cosmic Swirl</span>
-                        </div>
-                    </div>
-                    <div class="bg-preview-option" data-bg="2" onclick="selectBackground(2)">
-                        <img src="image/02.gif" alt="Background 2">
-                        <div class="bg-preview-overlay">
-                            <span>Space Tunnel</span>
-                        </div>
-                    </div>
-                    <div class="bg-preview-option" data-bg="3" onclick="selectBackground(3)">
-                        <img src="image/03.gif" alt="Background 3">
-                        <div class="bg-preview-overlay">
-                            <span>Nebula Waves</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="form-group">
                 <label class="form-label">🎵 Galactic Audio</label>
                 <div class="audio-toggle" id="audioToggle" onclick="toggleAudio()">
